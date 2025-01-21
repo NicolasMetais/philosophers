@@ -1,0 +1,33 @@
+SRCS = 	src/main.c \
+		src/parsing.c \
+		src/ft_atol.c \
+		src/philo.c \
+
+
+OBJS = $(SRCS:.c=.o)
+
+CC = cc
+
+CFLAGS = -Wall -Wextra -Werror -Iinclude -g3
+
+NAME = philo
+
+
+all: $(NAME)
+
+
+$(NAME): $(OBJS)
+	$(CC) $(OBJS) -o $(NAME)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -rf $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re:	fclean all
+
+.PHONY: all clean fclean re
