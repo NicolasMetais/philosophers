@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 03:29:41 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/21 21:55:16 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/22 02:43:59 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,5 @@ int	main(int ac, char **av)
 		philo_init(&philo, av);
 		boring_life_setup(&philo);
 	}
+	
 }

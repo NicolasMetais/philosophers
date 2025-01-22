@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 03:19:22 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/21 22:11:19 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/22 02:21:44 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <limits.h>
+# include <pthread.h>
+# include <sys/time.h>
+# include <stdlib.h>
 
 typedef struct s_philo
 {
