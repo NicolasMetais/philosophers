@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 06:17:43 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/22 02:47:41 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/22 05:00:32 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,34 @@ void	*timer(void *data)
 	return (NULL);
 }
 
-t_boolean	boring_life_setup(t_philo *philo)
+void	*philo_exec(void *data)
 {
-	pthread_t	timer_ms;
+	t_global	*global;
+	int			index;
 
-	(void)philo;
-	printf("SUCCES");
-	pthread_create(&timer_ms, NULL, timer, NULL);
-	pthread_join(timer_ms, NULL);
+	global = data;
+	printf("%d\n", index);
+	return (NULL);
+}
+
+t_boolean	boring_life_setup(t_global *global)
+{
+	pthread_t	thread;
+	int			i;
+
+	i = 0;
+	printf("SUCCES\n");
+	pthread_create(&thread, NULL, timer, NULL);
+	while (i < (int)global->philo_num)
+	{
+		pthread_create(&thread, NULL, philo_exec, global);
+		sleep(1);
+		i++;
+	}
+	while (i < (int)global->philo_num + 1)
+	{
+		pthread_join(thread, NULL);
+		i++;
+	}
 	return (true);
 }
