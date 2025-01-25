@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   linked_list_utils.c                                :+:      :+:    :+:   */
+/*   linked_list_philo.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 19:36:31 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/25 05:28:58 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/25 23:48:07 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philo	*ft_lstnew(int content, t_global *global)
+t_philo	*ft_lstnew_philo(int content, t_global *global)
 {
 	t_philo	*lst;
 
@@ -21,11 +21,13 @@ t_philo	*ft_lstnew(int content, t_global *global)
 		return (NULL);
 	lst->index = content;
 	lst->global = global;
+	lst->fork_right = global->fork;
+	lst->fork_left = global->fork->next;
 	lst->next = NULL;
 	return (lst);
 }
 
-t_philo	*ft_lstlast(t_philo *lst)
+t_philo	*ft_lstlast_philo(t_philo *lst)
 {
 	int	i;
 
@@ -38,10 +40,10 @@ t_philo	*ft_lstlast(t_philo *lst)
 	return (lst);
 }
 
-void	ft_lstadd_back(t_philo **lst, t_philo *new)
+void	ft_lstadd_back_philo(t_philo **lst, t_philo *new)
 {
 	if (*lst)
-		ft_lstlast(*lst)->next = new;
+		ft_lstlast_philo(*lst)->next = new;
 	else
 		*lst = new;
 }

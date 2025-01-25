@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 06:17:43 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/25 06:25:00 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/25 21:15:58 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,12 @@ void	*timer(void *data)
 		pthread_mutex_lock(&global->timer);
 		global->elapsed = (current.tv_sec - start.tv_sec) * 1000
 			+ (current.tv_usec - start.tv_usec) / 1000;
-		//deathbringer dans le coin + test
 		printf("\nELAPSED %ld\n", global->elapsed);
+		if (!deathbringer(global))
+		{
+			pthread_mutex_unlock(&global->timer);
+			return (NULL);
+		}
 		pthread_mutex_unlock(&global->timer);
 		usleep(1000);
 	}
@@ -49,7 +53,11 @@ void	*philo_exec(void *data)
 	pthread_mutex_lock(&philo->global->timer);
 	printf("%ld\n", philo->global->elapsed);
 	pthread_mutex_unlock(&philo->global->timer);
-	return (NULL);
+	while (1)
+	{
+		if (philo->global->kill == true)
+			return (NULL);
+	}
 }
 
 t_boolean	boring_life_setup(t_global *global)
@@ -63,6 +71,7 @@ t_boolean	boring_life_setup(t_global *global)
 	if (!thread)
 		return (false);
 	pthread_mutex_init(&global->timer, NULL);
+	pthread_mutex_init(&global->death, NULL);
 	pthread_create(&thread[0], NULL, timer, global);
 	i = 0;
 	while (++i < global->philo_num + 1)
@@ -74,6 +83,8 @@ t_boolean	boring_life_setup(t_global *global)
 	while (i > 0)
 		pthread_join(thread[--i], NULL);
 	pthread_mutex_destroy(&global->timer);
+	pthread_mutex_destroy(&global->timer);
 	free(thread);
+	free(global->death_check);
 	return (true);
 }
