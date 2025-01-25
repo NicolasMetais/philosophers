@@ -1,6 +1,7 @@
 SRCS = 	src/main.c \
 		src/parsing.c \
 		src/ft_atol.c \
+		src/linked_list_utils.c \
 		src/philo.c \
 
 

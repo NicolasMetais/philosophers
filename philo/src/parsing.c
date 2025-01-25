@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 23:27:46 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/21 06:12:56 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/22 19:30:43 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ t_boolean	digit_check(char *str)
 	}
 	return (true);
 }
-
 
 t_boolean	parse_args(char **av)
 {

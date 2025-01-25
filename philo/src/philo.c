@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 06:17:43 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/22 05:00:32 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/25 05:44:09 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,47 +16,63 @@ void	*timer(void *data)
 {
 	struct timeval	start;
 	struct timeval	current;
-	long			elapsed;
+	t_global		*global;
 
-	(void) data;
+	global = data;
 	gettimeofday(&start, NULL);
 	while (1)
 	{
 		gettimeofday(&current, NULL);
-		elapsed = (current.tv_sec - start.tv_sec) * 1000
+		pthread_mutex_lock(&global->timer);
+		global->elapsed = (current.tv_sec - start.tv_sec) * 1000
 			+ (current.tv_usec - start.tv_usec) / 1000;
+		printf("\nELAPSED %ld\n", global->elapsed);
+		pthread_mutex_unlock(&global->timer);
+		usleep(1000);
 	}
 	return (NULL);
 }
 
 void	*philo_exec(void *data)
 {
-	t_global	*global;
+	t_philo		*philo;
 	int			index;
+	int			fork;
+	t_boolean	eat;
 
-	global = data;
-	printf("%d\n", index);
+	philo = data;
+	index = philo->index;
+	printf("INDEX %d\n", index);
+	fork = 1;
+	eat = false;
+	pthread_mutex_lock(&philo->global->timer);
+	printf("%ld\n", philo->global->elapsed);
+	pthread_mutex_unlock(&philo->global->timer);
 	return (NULL);
 }
 
 t_boolean	boring_life_setup(t_global *global)
 {
-	pthread_t	thread;
+	pthread_t	*thread;
+	t_philo		*temp;
 	int			i;
 
+	temp = global->philo;
+	thread = malloc(sizeof(pthread_t) * (global->philo_num + 1));
+	if (!thread)
+		return (false);
+	pthread_mutex_init(&global->timer, NULL);
+	pthread_create(&thread[0], NULL, timer, global);
 	i = 0;
-	printf("SUCCES\n");
-	pthread_create(&thread, NULL, timer, NULL);
-	while (i < (int)global->philo_num)
+	while (++i < global->philo_num + 1)
 	{
-		pthread_create(&thread, NULL, philo_exec, global);
-		sleep(1);
-		i++;
+		pthread_create(&thread[i], NULL, philo_exec, temp);
+		temp = temp->next;
 	}
-	while (i < (int)global->philo_num + 1)
-	{
-		pthread_join(thread, NULL);
-		i++;
-	}
+	i = (int)global->philo_num + 1;
+	while (i > 0)
+		pthread_join(thread[--i], NULL);
+	pthread_mutex_destroy(&global->timer);
+	free(thread);
 	return (true);
 }
