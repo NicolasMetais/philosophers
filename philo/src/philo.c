@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 06:17:43 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/25 06:19:15 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/25 06:25:00 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	*timer(void *data)
 		pthread_mutex_lock(&global->timer);
 		global->elapsed = (current.tv_sec - start.tv_sec) * 1000
 			+ (current.tv_usec - start.tv_usec) / 1000;
-		//deathbringer dans le coin
+		//deathbringer dans le coin + test
 		printf("\nELAPSED %ld\n", global->elapsed);
 		pthread_mutex_unlock(&global->timer);
 		usleep(1000);
