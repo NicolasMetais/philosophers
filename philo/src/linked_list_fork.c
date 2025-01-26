@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 22:58:38 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/25 23:51:47 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/26 04:07:54 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ t_fork	*ft_lstnew_fork(int content, t_global *global)
 	lst = malloc(sizeof(t_fork));
 	if (!lst)
 		return (NULL);
-	lst->number = content;
+	pthread_mutex_init(&lst->num, NULL);
+	lst->index = content;
+	lst->number = 1;
 	lst->global = global;
 	lst->next = NULL;
 	return (lst);

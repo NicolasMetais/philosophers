@@ -6,13 +6,13 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 19:36:31 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/25 23:48:07 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/26 06:19:04 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philo	*ft_lstnew_philo(int content, t_global *global)
+t_philo	*ft_lstnew_philo(int content, t_global *global, t_fork *fork)
 {
 	t_philo	*lst;
 
@@ -21,8 +21,8 @@ t_philo	*ft_lstnew_philo(int content, t_global *global)
 		return (NULL);
 	lst->index = content;
 	lst->global = global;
-	lst->fork_right = global->fork;
-	lst->fork_left = global->fork->next;
+	lst->fork_right = fork->next;
+	lst->fork_left = fork;
 	lst->next = NULL;
 	return (lst);
 }

@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 06:17:43 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/25 21:15:58 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/26 05:28:10 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,15 @@ void	*timer(void *data)
 	while (1)
 	{
 		gettimeofday(&current, NULL);
-		pthread_mutex_lock(&global->timer);
+ 		pthread_mutex_lock(&global->timer);
 		global->elapsed = (current.tv_sec - start.tv_sec) * 1000
 			+ (current.tv_usec - start.tv_usec) / 1000;
-		printf("\nELAPSED %ld\n", global->elapsed);
 		if (!deathbringer(global))
 		{
 			pthread_mutex_unlock(&global->timer);
 			return (NULL);
 		}
 		pthread_mutex_unlock(&global->timer);
-		usleep(1000);
 	}
 	return (NULL);
 }
@@ -43,18 +41,34 @@ void	*philo_exec(void *data)
 	t_philo		*philo;
 	int			index;
 	int			fork;
-	t_boolean	eat;
+	t_boolean	trigger;
 
 	philo = data;
+	philo->eat = false;
+	trigger = true;
 	index = philo->index;
-	printf("INDEX %d\n", index);
 	fork = 1;
-	eat = false;
-	pthread_mutex_lock(&philo->global->timer);
-	printf("%ld\n", philo->global->elapsed);
-	pthread_mutex_unlock(&philo->global->timer);
 	while (1)
 	{
+		pthread_mutex_lock(&philo->fork_left->num);
+		pthread_mutex_lock(&philo->fork_right->num);
+		if (trigger && index % 2 != 0)
+		{
+			burger_king(philo);
+		}
+		else
+			think(philo);
+		if (philo->fork_left->number == 1
+			&& philo->fork_right->number == 1 && !trigger)
+			burger_king(philo);
+		else
+		{
+			think(philo);
+		}
+		if (philo->eat)
+			mimimimi(philo);
+		if (trigger)
+			trigger = false;
 		if (philo->global->kill == true)
 			return (NULL);
 	}
@@ -70,8 +84,6 @@ t_boolean	boring_life_setup(t_global *global)
 	thread = malloc(sizeof(pthread_t) * (global->philo_num + 1));
 	if (!thread)
 		return (false);
-	pthread_mutex_init(&global->timer, NULL);
-	pthread_mutex_init(&global->death, NULL);
 	pthread_create(&thread[0], NULL, timer, global);
 	i = 0;
 	while (++i < global->philo_num + 1)
@@ -82,8 +94,6 @@ t_boolean	boring_life_setup(t_global *global)
 	i = (int)global->philo_num + 1;
 	while (i > 0)
 		pthread_join(thread[--i], NULL);
-	pthread_mutex_destroy(&global->timer);
-	pthread_mutex_destroy(&global->timer);
 	free(thread);
 	free(global->death_check);
 	return (true);
