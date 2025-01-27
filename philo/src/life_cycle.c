@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 19:57:55 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/27 05:35:36 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/27 05:38:57 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	burger_king(t_philo *philo)
 {
 	if (!isdead(philo->global))
 	{
-		//fork_taker(philo);
+		fork_taker(philo);
 		pthread_mutex_lock(&philo->global->timer);
 		pthread_mutex_lock(&philo->global->death);
 		philo->global->death_check[philo->index - 1] = philo->global->elapsed;
