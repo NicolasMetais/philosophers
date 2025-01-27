@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 06:17:43 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/27 05:35:03 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/27 17:19:47 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	*timer(void *data)
 		global->elapsed = (current.tv_sec - start.tv_sec) * 1000
 			+ (current.tv_usec - start.tv_usec) / 1000;
 		pthread_mutex_unlock(&global->timer);
-		if (!deathbringer(global))
+		if (!deathbringer(global) || !diet(global))
 			return (NULL);
 	}
 	return (NULL);
@@ -37,47 +37,13 @@ void	*timer(void *data)
 {
 	if (philo->index % 2 == 0)
 	{
-		if (philo->fork_right->number == 1)
-		{
-			pthread_mutex_lock(&philo->fork_right->num);
-			philo->fork_right->number = 0;
-		}
-		if (philo->fork_left->number == 1)
-		{
-			printf("%ld %d has taken a fork\n",
-				philo->global->elapsed, philo->index);
-			printf("%ld %d has taken a fork\n",
-				philo->global->elapsed, philo->index);
-			philo->fork_left->number = 0;
-			pthread_mutex_lock(&philo->fork_left->num);
-		}
-		else
-		{
-			philo->fork_right->number = 1;
-			pthread_mutex_unlock(&philo->fork_right->num);
-		}
+		pthread_mutex_lock(&philo->fork_right->num);
+		pthread_mutex_lock(&philo->fork_left->num);
 	}
 	else
 	{
-		if (philo->fork_left->number == 1)
-		{
-			pthread_mutex_lock(&philo->fork_left->num);
-			philo->fork_left->number = 0;
-		}
-		if (philo->fork_right->number == 1)
-		{
-			pthread_mutex_lock(&philo->fork_right->num);
-			printf("%ld %d has taken a fork\n",
-				philo->global->elapsed, philo->index);
-			printf("%ld %d has taken a fork\n",
-				philo->global->elapsed, philo->index);
-			philo->fork_right->number = 0;
-		}
-		else
-		{
-			philo->fork_left->number = 1;
-			pthread_mutex_unlock(&philo->fork_left->num);
-		}
+		pthread_mutex_lock(&philo->fork_left->num);
+		pthread_mutex_lock(&philo->fork_right->num);
 	}
 } */
 
@@ -91,6 +57,18 @@ t_boolean	isdead(t_global *global)
 	return (alive);
 }
 
+t_boolean	philo_desynch(t_philo *philo)
+{
+	if (philo->index % 2 != 0 || philo->global->philo_num == 1)
+	{
+		if (!think(philo))
+			return (false);
+		if (usleep(500) == -1)
+			return (false);
+	}
+	return (true);
+}
+
 void	*philo_exec(void *data)
 {
 	t_philo		*philo;
@@ -98,21 +76,17 @@ void	*philo_exec(void *data)
 
 	philo = data;
 	index = philo->index;
-	if (index % 2 != 0)
-	{
-		think(philo);
-		usleep(500);
-	}
+	philo->diet = 0;
+	if (!philo_desynch(philo))
+		return (NULL);
 	while (1)
 	{
-		//fork_lock(philo);
-		pthread_mutex_lock(&philo->fork_right->num);
 		pthread_mutex_lock(&philo->fork_left->num);
-		if (philo->fork_left->number == 1
-			&& philo->fork_right->number == 1)
+		pthread_mutex_lock(&philo->fork_right->num);
+		if (philo->fork_left->number && philo->fork_right->number)
 			burger_king(philo);
-		pthread_mutex_unlock(&philo->fork_right->num);
 		pthread_mutex_unlock(&philo->fork_left->num);
+		pthread_mutex_unlock(&philo->fork_right->num);
 		if (philo->eat)
 			mimimimi(philo);
 		think(philo);

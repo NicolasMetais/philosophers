@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 23:27:46 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/22 19:30:43 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/27 17:25:07 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,40 @@ t_boolean	parse_args(char **av)
 	size_t	i;
 
 	i = 1;
-	while (i < 5)
+	while (av[i])
 	{
 		if (!digit_check(av[i]))
 			return (false);
-		if (ft_atol(av[i]) > INT_MAX || ft_atol(av[i]) < INT_MIN)
+		if (ft_atol(av[i]) > INT_MAX)
 		{
 			write(2, "int overflow", 12);
+			return (false);
+		}
+		if (ft_atol(av[i]) <= 0)
+		{
+			write(2, "only positiv numbers", 20);
 			return (false);
 		}
 		i++;
 	}
 	return (true);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	size_t	i;
+	char	*al;
+
+	i = 0;
+	if (nmemb * size > 2147483647)
+		return (NULL);
+	al = malloc(nmemb * size);
+	if (al == NULL)
+		return (NULL);
+	while (i < (nmemb * size))
+	{
+		al[i] = 0;
+		i++;
+	}
+	return ((void *)al);
 }

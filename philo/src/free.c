@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 00:51:28 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/27 02:41:57 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/27 15:52:12 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@ void	free_all(t_global *global)
 	t_fork	*current1;
 	t_fork	*next1;
 
+	if (global->philo_num == 1)
+	{
+		free(global->philo->fork_left);
+		free(global->philo);
+		return ;
+	}
 	i = -1;
 	current = global->philo;
 	current1 = global->fork;

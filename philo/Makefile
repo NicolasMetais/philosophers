@@ -6,6 +6,7 @@ SRCS = 	src/main.c \
 		src/linked_setup/linked_list_philo.c \
 		src/philo.c \
 		src/life_cycle.c \
+		src/diet.c \
 		src/free.c \
 
 

@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 03:19:22 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/27 05:05:57 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/27 17:25:18 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_fork
 typedef struct s_philo
 {
 	int					index;
+	int					diet;
 	struct s_global		*global;
 	t_fork				*fork_right;
 	t_fork				*fork_left;
@@ -53,6 +54,10 @@ typedef struct s_global
 	long long		philo_num;
 	long long		eat_timer;
 	long long		die_timer;
+	long long		max_diet;
+	t_boolean		diet;
+	long			*eat_count;
+	pthread_mutex_t	count;
 	pthread_mutex_t	death;
 	long			*death_check;
 	long long		sleep_timer;
@@ -72,8 +77,9 @@ int			linked_setup(t_global *global);
 t_boolean	deathbringer(t_global *global);
 void		burger_king(t_philo *philo);
 void		mimimimi(t_philo *philo);
-void		think(t_philo *philo);
+t_boolean	think(t_philo *philo);
 t_boolean	isdead(t_global *global);
+t_boolean	diet(t_global *global);
 
 t_philo		*ft_lstlast_philo(t_philo *lst);
 t_fork		*ft_lstlast_fork(t_fork *lst);
@@ -85,4 +91,6 @@ t_fork		*ft_lstnew_fork(int content, t_global *global);
 void		free_all(t_global *global);
 void		emergency_free_fork(t_global *global);
 void		emergency_free_philo(t_global *global);
+
+void		*ft_calloc(size_t nmemb, size_t size);
 #endif
