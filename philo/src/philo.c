@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 06:17:43 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/26 05:28:10 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/27 00:50:31 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*timer(void *data)
 	while (1)
 	{
 		gettimeofday(&current, NULL);
- 		pthread_mutex_lock(&global->timer);
+		pthread_mutex_lock(&global->timer);
 		global->elapsed = (current.tv_sec - start.tv_sec) * 1000
 			+ (current.tv_usec - start.tv_usec) / 1000;
 		if (!deathbringer(global))
@@ -36,40 +36,44 @@ void	*timer(void *data)
 	return (NULL);
 }
 
+void	fork_lock(t_philo *philo)
+{
+	if (&philo->fork_left->num < &philo->fork_right->num)
+	{
+		pthread_mutex_lock(&philo->fork_left->num);
+		pthread_mutex_lock(&philo->fork_right->num);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->fork_right->num);
+		pthread_mutex_lock(&philo->fork_left->num);
+	}
+}
+
 void	*philo_exec(void *data)
 {
 	t_philo		*philo;
 	int			index;
-	int			fork;
-	t_boolean	trigger;
 
 	philo = data;
-	philo->eat = false;
-	trigger = true;
 	index = philo->index;
-	fork = 1;
+	if (index % 2 != 0)
+	{
+		think(philo);
+		usleep(500);
+	}
 	while (1)
 	{
-		pthread_mutex_lock(&philo->fork_left->num);
-		pthread_mutex_lock(&philo->fork_right->num);
-		if (trigger && index % 2 != 0)
-		{
-			burger_king(philo);
-		}
-		else
-			think(philo);
+		fork_lock(philo);
 		if (philo->fork_left->number == 1
-			&& philo->fork_right->number == 1 && !trigger)
+			&& philo->fork_right->number == 1)
 			burger_king(philo);
-		else
-		{
-			think(philo);
-		}
+		pthread_mutex_unlock(&philo->fork_right->num);
+		pthread_mutex_unlock(&philo->fork_left->num);
 		if (philo->eat)
 			mimimimi(philo);
-		if (trigger)
-			trigger = false;
-		if (philo->global->kill == true)
+		think(philo);
+		if (philo->global->kill)
 			return (NULL);
 	}
 }
@@ -95,6 +99,5 @@ t_boolean	boring_life_setup(t_global *global)
 	while (i > 0)
 		pthread_join(thread[--i], NULL);
 	free(thread);
-	free(global->death_check);
 	return (true);
 }

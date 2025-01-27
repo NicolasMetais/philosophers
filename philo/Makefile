@@ -1,10 +1,12 @@
 SRCS = 	src/main.c \
 		src/parsing.c \
 		src/ft_atol.c \
-		src/linked_list_fork.c \
-		src/linked_list_philo.c \
+		src/linked_setup/linked_setup.c \
+		src/linked_setup/linked_list_fork.c \
+		src/linked_setup/linked_list_philo.c \
 		src/philo.c \
 		src/life_cycle.c \
+		src/free.c \
 
 
 OBJS = $(SRCS:.c=.o)

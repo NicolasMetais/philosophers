@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 03:19:22 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/26 04:20:27 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/27 00:36:13 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_philo
 	t_fork				*fork_left;
 	t_fork				*fork_right;
 	t_boolean			eat;
+	t_boolean			think;
 	struct s_philo		*next;
 }	t_philo;
 
@@ -57,6 +58,7 @@ typedef struct s_global
 	long long		sleep_timer;
 	pthread_mutex_t	timer;
 	long			elapsed;
+	pthread_mutex_t	exit;
 	t_boolean		kill;
 	t_philo			*philo;
 	t_fork			*fork;
@@ -65,6 +67,7 @@ typedef struct s_global
 long long	ft_atol(const char *nptr);
 t_boolean	parse_args(char **av);
 t_boolean	boring_life_setup(t_global *global);
+void		linked_setup(t_global *global);
 
 t_boolean	deathbringer(t_global *global);
 void		burger_king(t_philo *philo);
