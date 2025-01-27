@@ -6,13 +6,13 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 00:51:28 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/27 00:59:41 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/27 02:41:57 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	free(t_global *global)
+void	free_all(t_global *global)
 {
 	int		i;
 	t_philo	*current;
@@ -21,25 +21,51 @@ void	free(t_global *global)
 	t_fork	*next1;
 
 	i = -1;
+	current = global->philo;
+	current1 = global->fork;
 	while (++i < global->philo_num)
 	{
-		
+		next = current->next;
+		next1 = current1->next;
+		free(current);
+		free(current1);
+		current = next;
+		current1 = next1;
 	}
 }
 
-/* void	free_pile(t_sort *sort)
+void	emergency_free_fork(t_global *global)
 {
-	t_list	*current;
-	t_list	*next;
-	size_t	i;
+	int		i;
+	t_fork	*current;
+	t_fork	*next;
 
-	i = 0;
-	current = sort->pilea;
-	while (i < sort->lena)
+	i = -1;
+	current = global->fork;
+	while (current)
 	{
 		next = current->next;
 		free(current);
 		current = next;
-		i++;
 	}
-} */
+}
+
+void	emergency_free_philo(t_global *global)
+{
+	int		i;
+	t_philo	*current;
+	t_philo	*next;
+	t_fork	*last;
+
+	i = -1;
+	current = global->philo;
+	while (current)
+	{
+		next = current->next;
+		free(current);
+		current = next;
+	}
+	last = ft_lstlast_fork(global->fork);
+	last->next = NULL;
+	emergency_free_fork(global);
+}

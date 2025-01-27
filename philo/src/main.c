@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 03:29:41 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/27 00:51:19 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/27 02:00:25 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,13 @@ int	main(int ac, char **av)
 			return (false);
 		if (!global_init(&global, av))
 			return (false);
-		linked_setup(&global);
+		if (!linked_setup(&global))
+			return (false);
 		mutex_init(&global);
-		if(!boring_life_setup(&global));
-			return(false);
+		if (!boring_life_setup(&global))
+			return (false);
 		mutex_destroy(&global);
 		free(global.death_check);
+		free_all(&global);
 	}
 }
