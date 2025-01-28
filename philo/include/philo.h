@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 03:19:22 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/27 17:25:18 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/28 04:54:49 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,9 @@ void		emergency_free_fork(t_global *global);
 void		emergency_free_philo(t_global *global);
 
 void		*ft_calloc(size_t nmemb, size_t size);
+
+void		fork_taker(t_philo *philo);
+
+void		lock_fork(t_global *global);
+void		unlock_fork(t_global *global);
 #endif

@@ -8,6 +8,7 @@ SRCS = 	src/main.c \
 		src/life_cycle.c \
 		src/diet.c \
 		src/free.c \
+		src/mutex.c \
 
 
 OBJS = $(SRCS:.c=.o)

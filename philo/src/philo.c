@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 06:17:43 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/27 17:19:47 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/28 04:57:06 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,11 @@ void	*philo_exec(void *data)
 		return (NULL);
 	while (1)
 	{
-		pthread_mutex_lock(&philo->fork_left->num);
-		pthread_mutex_lock(&philo->fork_right->num);
+		lock_fork(philo->global);
 		if (philo->fork_left->number && philo->fork_right->number)
 			burger_king(philo);
-		pthread_mutex_unlock(&philo->fork_left->num);
-		pthread_mutex_unlock(&philo->fork_right->num);
+		else
+			unlock_fork(philo->global);
 		if (philo->eat)
 			mimimimi(philo);
 		think(philo);
