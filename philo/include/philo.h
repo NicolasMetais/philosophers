@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 03:19:22 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/28 04:54:49 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/31 00:21:43 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,12 @@ void		*ft_calloc(size_t nmemb, size_t size);
 
 void		fork_taker(t_philo *philo);
 
+void		print_actions(t_global *global, int index, char *toprint);
 void		lock_fork(t_global *global);
 void		unlock_fork(t_global *global);
+t_boolean	fork_checker(t_philo *philo);
+t_boolean	death_checker(t_global *global, int i);
+void		set_time(t_global *global, struct timeval start,
+				struct timeval current);
+void		reset_life_time(t_philo *philo);
 #endif

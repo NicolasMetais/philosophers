@@ -9,20 +9,21 @@ SRCS = 	src/main.c \
 		src/diet.c \
 		src/free.c \
 		src/mutex.c \
+		src/mutex_fork.c \
 
 
 OBJS = $(SRCS:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -Iinclude -g3
+CFLAGS = -Wall -Wextra -Werror -Iinclude -g3 #-fsanitize=address -static-libsan -pthread
 
 NAME = philo
 
 
 all: $(NAME)
 
-
+#-fsanitize=address -lasan
 $(NAME): $(OBJS)
 	$(CC) $(OBJS) -o $(NAME)
 

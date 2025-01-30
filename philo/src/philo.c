@@ -6,7 +6,7 @@
 /*   By: nmetais <nmetais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 06:17:43 by nmetais           #+#    #+#             */
-/*   Updated: 2025/01/28 04:57:06 by nmetais          ###   ########.fr       */
+/*   Updated: 2025/01/31 00:23:06 by nmetais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,29 +23,13 @@ void	*timer(void *data)
 	while (1)
 	{
 		gettimeofday(&current, NULL);
-		pthread_mutex_lock(&global->timer);
-		global->elapsed = (current.tv_sec - start.tv_sec) * 1000
-			+ (current.tv_usec - start.tv_usec) / 1000;
-		pthread_mutex_unlock(&global->timer);
+		set_time(global, start, current);
 		if (!deathbringer(global) || !diet(global))
 			return (NULL);
+		usleep(1000);
 	}
 	return (NULL);
 }
-
-/* void	fork_lock(t_philo *philo)
-{
-	if (philo->index % 2 == 0)
-	{
-		pthread_mutex_lock(&philo->fork_right->num);
-		pthread_mutex_lock(&philo->fork_left->num);
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->fork_left->num);
-		pthread_mutex_lock(&philo->fork_right->num);
-	}
-} */
 
 t_boolean	isdead(t_global *global)
 {
@@ -63,7 +47,7 @@ t_boolean	philo_desynch(t_philo *philo)
 	{
 		if (!think(philo))
 			return (false);
-		if (usleep(500) == -1)
+		if (usleep(100) == -1)
 			return (false);
 	}
 	return (true);
@@ -81,17 +65,15 @@ void	*philo_exec(void *data)
 		return (NULL);
 	while (1)
 	{
-		lock_fork(philo->global);
-		if (philo->fork_left->number && philo->fork_right->number)
+		if (fork_checker(philo))
 			burger_king(philo);
-		else
-			unlock_fork(philo->global);
 		if (philo->eat)
 			mimimimi(philo);
 		think(philo);
 		if (isdead(philo->global))
-			return (NULL);
+			break ;
 	}
+	return (NULL);
 }
 
 t_boolean	boring_life_setup(t_global *global)
